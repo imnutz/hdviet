@@ -1,0 +1,15 @@
+{
+    "description": "<p>HDViet – Xem phim online miễn phí chất lượng cao full HD, visit <a href=\"http://movies.hdviet.com\">http://movies.hdviet.com</a>",
+    "author": "sondo",
+    "homepage": "https://github.com/imnutz/imnutz.github.io",
+    "title": "HD Viet Nam",
+    "synopsis": "HDViet – Xem phim online miễn phí chất lượng cao full HD",
+    "version": "1.0.0",
+    "file": "myhdviet.js",
+    "showtimeVersion": "5.0",
+    "type": "ecmascript",
+    "id": "myhdviet",
+    "icon": "logo.png",
+    "category": "video",
+    "apiversion": 1
+}
