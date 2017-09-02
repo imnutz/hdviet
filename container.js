@@ -5,12 +5,12 @@ var container = {
     renderer: null,
 
     intents: {
-        'start': 'start',
+        'start':          'start',
         'selectCategory': 'selectCategory',
-        'selectMovie': 'selectMovie',
-        'selectEpisode': 'selectEpisode',
-        'doPaging': 'doPaging',
-        'search': 'search',
+        'selectMovie':    'selectMovie',
+        'selectEpisode':  'selectEpisode',
+        'doPaging':       'doPaging',
+        'search':         'search',
         'doSearchPaging': 'doSearchPaging'
     },
 

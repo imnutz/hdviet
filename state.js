@@ -3,6 +3,7 @@ module.exports = {
         var operationIs = this.utils.operationIs(model.pageOperation);
 
         if (operationIs(this.ops.START_OP)) {
+            showtime.print(model.searchCache.recent);
             this.renderer.renderLanding(
                 model.atPage,
                 {

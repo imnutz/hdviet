@@ -7,7 +7,6 @@ module.exports = {
     },
 
     renderLanding: function renderLanding(page, data) {
-        // searchTitle, movieTitle, seriesTitle, movieCategories, serieCategories, searchTerms
         page.type = 'directory';
         page.metadata.title = data.appTitle;
 

@@ -4,7 +4,7 @@ var page = require('showtime/page'),
     http = require('showtime/http'),
     service = require('showtime/service'),
     html = require('showtime/html'),
-    cache = require('showtime/store');
+    cache = require('showtime/store').create('cache');
 
 var common = require('./common');
 
@@ -21,6 +21,10 @@ io.httpInspectorCreate(common.baseUrl + '/.*', function (ctrl) {
     ctrl.setHeader('User-Agent', UA);
     return 0;
 });
+
+if (!cache.recent) {
+    cache.recent = [];
+}
 
 // Wiring components
 hdvietService.http = http;
