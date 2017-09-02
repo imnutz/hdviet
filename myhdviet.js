@@ -3,7 +3,8 @@ var page = require('showtime/page'),
     fs = require('native/fs'),
     http = require('showtime/http'),
     service = require('showtime/service'),
-    html = require('showtime/html');
+    html = require('showtime/html'),
+    cache = require('showtime/store');
 
 var common = require('./common');
 
@@ -26,7 +27,10 @@ hdvietService.http = http;
 hdvietService.html = html;
 
 container.init(state, action, model, renderer);
-container.setService(hdvietService);
+container.setServices({
+    service: hdvietService,
+    searchCache: cache
+});
 container.setConfigs({
     baseUrl: common.config.baseUrl,
     prefix: common.config.prefix,
@@ -60,6 +64,8 @@ new page.Route([common.config.prefix, ':video:([^:]+):([^:]+):([^:]+)'].join('')
 
 new page.Route([common.config.prefix, ':search:(.*)'].join(''), function(page, query) {
     page.type = 'directory';
+
+    page.asyncPaginator = container.dispatch.bind(container, 'doSearchPaging', page, query);
 
     container.dispatch('search', page, query);
 });

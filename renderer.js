@@ -6,19 +6,32 @@ module.exports = {
         page.loading = true;
     },
 
-    renderLanding: function renderLanding(page, searchTitle, movieTitle, seriesTitle, movieCategories, serieCategories) {
+    renderLanding: function renderLanding(page, data) {
+        // searchTitle, movieTitle, seriesTitle, movieCategories, serieCategories, searchTerms
         page.type = 'directory';
-        page.metadata.title = 'HDVIET';
+        page.metadata.title = data.appTitle;
 
-        page.appendItem([ this.prefix, ':search:' ].join(''), 'search',  { title: searchTitle });
+        page.appendItem([ this.prefix, ':search:' ].join(''), 'search',  { title: data.searchTitle });
 
-        page.appendItem('', 'separator', { title: movieTitle });
-        movieCategories.forEach(function(category) {
+        if (data.searchTerms && data.searchTerms.length) {
+            page.appendItem("", "separator", {
+                title: data.recentSearchTitle
+            });
+
+            for (var i = 0; i < data.searchTerms.length; i++) {
+                page.appendItem([ this.prefix, ":search:", data.searchTerms[i] ].join(''), "directory", {
+                    title: data.searchTerms[i]
+                });
+            }
+        }
+
+        page.appendItem('', 'separator', { title: data.movieTitle });
+        data.movieCategories.forEach(function(category) {
             page.appendItem(category.path, category.type, { title: category.title });
         });
 
-        page.appendItem('', 'separator', { title: seriesTitle });
-        serieCategories.forEach(function(category) {
+        page.appendItem('', 'separator', { title: data.seriesTitle });
+        data.serieCategories.forEach(function(category) {
             page.appendItem(category.path, category.type, { title: category.title });
         });
     },

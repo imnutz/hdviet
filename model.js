@@ -34,7 +34,7 @@ var series = {
     'phim-bo-trung-quoc': 'Trung Quốc',
     'phim-bo-han-quoc': 'Hàn Quốc',
     'phim-bo-cac-nuoc-khac': 'Các nước khác'
-}
+};
 
 function createCategories(categoriesInfo, prefix) {
     var categories = [];
@@ -56,10 +56,12 @@ function getCategoryTitle(key) {
 module.exports = {
     movieCategories: null,
     serieCategories: null,
+
     prefix: 'hd-viet',
     movieTitle: 'Phim lẻ',
     searchTitle: 'Tìm kiếm',
     seriesTitle: 'Phim bộ',
+    appTitle: 'HD Việt',
     pageInfo: {},
 
     onStart: false,
@@ -73,6 +75,9 @@ module.exports = {
     selectedMovieId: null,
 
     offset: 1,
+    searchOffset: 1,
+
+    CACHE_LENGTH: 10,
 
     pageOperation: null,
 
@@ -176,16 +181,27 @@ module.exports = {
             return this.represent(this);
         }
 
-        if (operationIs(this.ops.LOADING_SEARCHING_OP)) {
+        if (operationIs(this.ops.LOADING_SEARCHING_OP) ||
+            operationIs(this.ops.LOADING_SEARCH_PAGING_OP)) {
             this.searchTerm = proposal.searchTerm;
+
+            this._updateSearchTermCache(proposal.searchTerm);
 
             return this.represent(this);
         }
 
-        if (operationIs(this.ops.FETCH_SEARCH_ITEMS_OP)) {
+        if (operationIs(this.ops.FETCH_SEARCH_ITEMS_OP) ||
+            operationIs(this.ops.FETCH_SEARCH_PAGING_ITEMS_OP)) {
+
+            if (proposal.isPaging) {
+                this.searchOffset += 1;
+            } else {
+                this.searchOffset = proposal.searchOffset;
+            }
+
             var searchResult = this.service.search([ this.baseUrl, SEARCH_PAGE_URL ].join(''), {
                 keyword: proposal.searchTerm,
-                page: 1
+                page: this.searchOffset
             });
 
             this.pageInfo.movies = searchResult.movies.map(function(movie) {
@@ -196,11 +212,36 @@ module.exports = {
                     image: movie.image
                 }
             });
-            this.atPage = proposal.page;
-            this.pageInfo.pageCount = searchResult.pageCount;
+            this.pageInfo.pageCount = Number(searchResult.pageCount);
+            this.isPaging = proposal.isPaging;
 
             return this.represent(this);
         }
+    },
+
+    getRecentSearchTitle: function getRecentSearchTitle() {
+        return [ this.CACHE_LENGTH, ' tìm kiếm gần nhất' ].join('');
+    },
+
+    _updateSearchTermCache: function _updateSearchTermCache(searchTerm) {
+        var indexOfSearchTerm,
+            recent = (this.searchCache && this.searchCache.recent) || [];
+
+        if (!recent.length) {
+            this.searchCache.recent = [];
+        }
+
+        indexOfSearchTerm = recent.indexOf(searchTerm);
+        if (indexOfSearchTerm !== -1) {
+            recent.splice(indexOfSearchTerm, 1);
+        }
+
+        if (recent.length >= this.CACHE_LENGTH) {
+            recent = recent.slice(0, recent.length - 1);
+        }
+
+        recent.unshift(searchTerm);
+        this.searchCache.recent = recent;
     },
 
     _getCategoryUrl: function _getCategoryUrl(category, offset) {

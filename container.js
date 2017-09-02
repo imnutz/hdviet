@@ -5,12 +5,13 @@ var container = {
     renderer: null,
 
     intents: {
-        "start": "start",
-        "selectCategory": "selectCategory",
-        "selectMovie": "selectMovie",
-        "selectEpisode": "selectEpisode",
-        "doPaging": "doPaging",
-        "search": "search"
+        'start': 'start',
+        'selectCategory': 'selectCategory',
+        'selectMovie': 'selectMovie',
+        'selectEpisode': 'selectEpisode',
+        'doPaging': 'doPaging',
+        'search': 'search',
+        'doSearchPaging': 'doSearchPaging'
     },
 
     init: function init(state, action, model, renderer) {
@@ -30,8 +31,12 @@ var container = {
         this.state.action = this.action;
     },
 
-    setService: function setService(service) {
-        this.model.service = service;
+    setServices: function setServices(services) {
+        for (var key in services) {
+            if (!this.model.hasOwnProperty(key)) {
+                this.model[key] = services[key];
+            }
+        }
     },
 
     setConfigs: function setConfigs(config) {

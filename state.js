@@ -5,18 +5,25 @@ module.exports = {
         if (operationIs(this.ops.START_OP)) {
             this.renderer.renderLanding(
                 model.atPage,
-                model.searchTitle,
-                model.movieTitle,
-                model.seriesTitle,
-                model.movieCategories,
-                model.serieCategories
+                {
+                    searchTitle: model.searchTitle,
+                    movieTitle: model.movieTitle,
+                    seriesTitle: model.seriesTitle,
+                    appTitle: model.appTitle,
+                    movieCategories: model.movieCategories,
+                    serieCategories: model.serieCategories,
+                    searchTerms: model.searchCache.recent,
+                    recentSearchTitle: model.getRecentSearchTitle()
+                }
             );
         }
 
         if (operationIs(this.ops.LOADING_CATEGORY_OP) ||
             operationIs(this.ops.LOADING_SEARCHING_OP) ||
-            operationIs(this.ops.LOADING_PAGING_OP)) {
-            var isSearching = model.pageOperation === 'loadingSearch';
+            operationIs(this.ops.LOADING_PAGING_OP) ||
+            operationIs(this.ops.LOADING_SEARCH_PAGING_OP)) {
+            var isSearching = operationIs(this.ops.LOADING_SEARCHING_OP) || operationIs(this.ops.LOADING_SEARCH_PAGING_OP);
+
             this.renderer.loading(model.atPage, isSearching ? model.searchTerm : '');
         }
 
@@ -49,8 +56,14 @@ module.exports = {
             this.renderer.playback(model.atPage, model.selectedEpisode, model.movieInfo.playInfo);
         }
 
-        if (operationIs(this.ops.FETCH_SEARCH_ITEMS_OP)) {
-            this.renderer.renderMoviesPage(model.atPage, model.categoryTitle, model.pageInfo.movies);
+        if (operationIs(this.ops.FETCH_SEARCH_ITEMS_OP) ||
+            operationIs(this.ops.FETCH_SEARCH_PAGING_ITEMS_OP)) {
+
+            if (model.isPaging && model.searchOffset > model.pageInfo.pageCount) {
+                    this.renderer.stopPagination(model.atPage);
+            } else {
+                this.renderer.renderMoviesPage(model.atPage, model.categoryTitle, model.pageInfo.movies);
+            }
         }
 
         this.nextAction(model);
@@ -71,9 +84,14 @@ module.exports = {
             return this.action.fetchCategoryItems(model.atPage, model.selectedCategory);
         }
 
+        if (operationIs(this.ops.LOADING_SEARCH_PAGING_OP)) {
+            return this.action.fetchSearchPagingItems(model.atPage, model.searchTerm);
+        }
+
         if (operationIs(this.ops.FETCH_CATEGORY_ITEMS_OP) ||
             operationIs(this.ops.FETCH_SEARCH_ITEMS_OP) ||
-            operationIs(this.ops.FETCH_CATEGORY_PAGING_ITEMS_OP)) {
+            operationIs(this.ops.FETCH_CATEGORY_PAGING_ITEMS_OP) ||
+            operationIs(this.ops.FETCH_SEARCH_PAGING_ITEMS_OP)) {
             return this.action.stopLoading(model.atPage);
         }
     }

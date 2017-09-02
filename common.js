@@ -13,7 +13,9 @@ module.exports.constants = {
     LOADING_PAGING_OP: 'loadingPaging',
     FETCH_CATEGORY_PAGING_ITEMS_OP: 'fetchPagingItemsForCategory',
     LOADING_SEARCHING_OP: 'loadingSearch',
-    FETCH_SEARCH_ITEMS_OP: 'fetchSearchItems'
+    FETCH_SEARCH_ITEMS_OP: 'fetchSearchItems',
+    LOADING_SEARCH_PAGING_OP: 'loadingSearchPaging',
+    FETCH_SEARCH_PAGING_ITEMS_OP: 'fetchSearchPagingItems'
 };
 
 module.exports.utils = {

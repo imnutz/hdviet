@@ -53,7 +53,7 @@ module.exports = {
         this.present({
             page: page,
             selectedCategory: category,
-            pageOperation: this.ops.LOADING_PAGING_OP,
+            pageOperation: this.ops.LOADING_PAGING_OP
         });
     },
 
@@ -70,7 +70,7 @@ module.exports = {
         this.present({
             searchTerm: searchTerm,
             page: page,
-            pageOperation: this.ops.LOADING_SEARCHING_OP,
+            pageOperation: this.ops.LOADING_SEARCHING_OP
         });
     },
 
@@ -78,7 +78,25 @@ module.exports = {
         this.present({
             searchTerm: searchTerm,
             page: page,
-            pageOperation: this.ops.FETCH_SEARCH_ITEMS_OP,
+            searchOffset: 1,
+            pageOperation: this.ops.FETCH_SEARCH_ITEMS_OP
+        });
+    },
+
+    doSearchPaging: function doSearchPaging(page, searchTerm) {
+        this.present({
+            pageOperation: this.ops.LOADING_SEARCH_PAGING_OP,
+            page: page,
+            searchTerm: searchTerm
+        });
+    },
+
+    fetchSearchPagingItems: function fetchSearchPagingItems(page, searchTerm) {
+        this.present({
+            pageOperation: this.ops.FETCH_SEARCH_PAGING_ITEMS_OP,
+            page: page,
+            searchTerm: searchTerm,
+            isPaging: true
         });
     }
 };
