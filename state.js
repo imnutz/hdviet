@@ -77,4 +77,4 @@ module.exports = {
             return this.action.stopLoading(model.atPage);
         }
     }
-}
+};

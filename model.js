@@ -222,4 +222,4 @@ module.exports = {
     _createMovieUrl: function _createCategoryUrl(movieId) {
         return [ EPISODES_URL, movieId ].join('');
     }
-}
+};

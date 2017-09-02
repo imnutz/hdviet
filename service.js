@@ -81,10 +81,10 @@ module.exports = {
                 keyword: opts.keyword,
                 page: opts.page
             }
-        }
+        };
 
         result = this.http.request(url, options);
 
         return this._populateResults(this.html.parse(result));
     }
-}
+};
